@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Movie Generator{% endblock %}</title>
+    <!-- Keeping Tailwind for legacy templates compatibility -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gray: {
+                            800: 'rgba(255, 255, 255, 0.03)',
+                            900: '#07070a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Premium UI overrides -->
+    <link rel="stylesheet" href="{% static 'css/main_premium.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Premium Navigation -->
+    <nav class="premium-nav">
+        <a href="{% url 'movies:home' %}" class="nav-brand">
+            ✨ AI Cinema
+        </a>
+        
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+                <a href="{% url 'movies:dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'movies:create_movie' %}" class="nav-link">Create Movie</a>
+                <a href="{% url 'movies:create_series' %}" class="nav-link">Create Series</a>
+                <span style="color: var(--text-muted); margin-left: 1rem; font-size: 0.9rem;">{{ user.username }}</span>
+                <a href="{% url 'users:logout' %}" class="btn-outline" style="padding: 0.4rem 1rem; border-color: rgba(239, 68, 68, 0.5); color: #fca5a5;">Logout</a>
+            {% else %}
+                <a href="{% url 'users:login' %}" class="nav-link">Login</a>
+                <a href="{% url 'users:register' %}" class="btn-primary">Get Started</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container" style="margin-top: 2rem;">
+        {% for message in messages %}
+        <div style="padding: 1rem; border-radius: 12px; margin-bottom: 1rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #93c5fd;" class="{% if message.tags == 'success' %}success-toast{% elif message.tags == 'error' %}error-toast{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>AI Movie Generator &copy; {% now "Y" %} &middot; Designed for the Future of Cinema</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ episode.title }} - AI Movie Generator{% endblock %}
+
+{% block extra_head %}
+<meta http-equiv="refresh" content="30">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Back button -->
+    <a href="{% url 'movies:series_detail' series.id %}" class="text-blue-400 hover:underline mb-4 inline-block">&larr; Back to Series</a>
+
+    <!-- Episode Info -->
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h1 class="text-3xl font-bold">{{ series.title }} - Episode {{ episode.episode_number }}</h1>
+                <p class="text-gray-400">{{ episode.title }} &bull; {{ episode.duration_minutes }} minutes</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-sm {% if episode.status == 'done' %}bg-green-800 text-green-200{% elif episode.status == 'processing' %}bg-yellow-800 text-yellow-200{% elif episode.status == 'failed' %}bg-red-800 text-red-200{% else %}bg-gray-700 text-gray-300{% endif %}">
+                {{ episode.get_status_display }}
+            </span>
+        </div>
+
+        <!-- Progress -->
+        {% if episode.status != 'done' and episode.status != 'failed' %}
+        <div class="mb-4">
+            <div class="flex justify-between text-sm text-gray-400 mb-2">
+                <span>Generation Progress</span>
+                <span>{{ episode.progress_percentage }}%</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-3">
+                <div class="bg-purple-600 h-3 rounded-full transition-all" style="width: {{ episode.progress_percentage }}%"></div>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Processing scene {{ episode.current_scene }} of {{ episode.total_scenes }}</p>
+        </div>
+        {% endif %}
+
+        {% if episode.status == 'done' %}
+        <div class="flex space-x-4">
+            <a href="{% url 'movies:episode_download' episode.id %}" class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded-md font-medium">Download</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Video Player -->
+    {% if episode.video_file %}
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Watch Episode</h2>
+        <video controls class="w-full rounded-lg">
+            <source src="{{ episode.video_file.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    {% endif %}
+
+    <!-- Story Summary -->
+    {% if episode.story_summary %}
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Episode Summary</h2>
+        <p class="text-gray-300">{{ episode.story_summary }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Cliffhanger -->
+    {% if episode.cliffhanger %}
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Next Time On...</h2>
+        <p class="text-gray-400 italic">{{ episode.cliffhanger }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Scenes List -->
+    {% if scenes %}
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Scenes</h2>
+        <div class="space-y-3">
+            {% for scene in scenes %}
+            <div class="bg-gray-900 rounded p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-purple-400">Scene {{ scene.scene_number }}</span>
+                    <span class="text-xs text-gray-500">{{ scene.duration_seconds }}s</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">{{ scene.description|truncatewords:30 }}</p>
+                <p class="text-gray-500 text-xs italic">{{ scene.narration|truncatewords:20 }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

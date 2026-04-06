@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - AI Cinema Generator{% endblock %}
+
+{% block content %}
+<!-- Use extra negative margins because we kept the tailwind main container in base.html but we want full bleed here if possible, or just normal. -->
+<section class="hero-section">
+    <div class="glow-orb" style="position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, rgba(0,0,0,0) 70%); z-index: -1;"></div>
+    
+    <h1 class="hero-title">Direct the Future<br>with Artificial Intelligence</h1>
+    <p class="hero-subtitle">
+        Transform your imagination into cinematic reality. Choose a genre, write a prompt, and let our synchronized AI pipeline dynamically orchestrate the script, voice acting, visuals, and score.
+    </p>
+    
+    <div style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
+        <a href="{% url 'users:register' %}" class="btn-primary" style="padding: 1.1rem 2.8rem; font-size: 1.15rem;">
+            Start Creating Free
+        </a>
+        <a href="{% url 'users:login' %}" class="btn-outline" style="padding: 1.1rem 2.8rem; font-size: 1.15rem;">
+            Go to Studio
+        </a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section style="padding: 5rem 0;">
+    <h2 style="text-align: center; font-size: 2.8rem; margin-bottom: 3.5rem; font-weight: 800; background: linear-gradient(to right, #cbd5e1, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">How It Works</h2>
+    
+    <div class="grid-3">
+        <div class="glass-card">
+            <div class="step-number">01</div>
+            <h3 style="font-size: 1.6rem; margin-bottom: 1rem; font-weight: 600;">Conceptualize</h3>
+            <p style="color: var(--text-muted); line-height: 1.7; font-size: 1.05rem;">Select from over a dozen genres—from Thriller to Kids Animation. Feed the engine a short description of your envisioned narrative.</p>
+        </div>
+        
+        <div class="glass-card">
+            <div class="step-number">02</div>
+            <h3 style="font-size: 1.6rem; margin-bottom: 1rem; font-weight: 600;">AI Orchestration</h3>
+            <p style="color: var(--text-muted); line-height: 1.7; font-size: 1.05rem;">Our Neural engines take over. Local LLMs write the script, Stable Diffusion renders the scenes, and Edge-TTS provides the voiceover.</p>
+        </div>
+        
+        <div class="glass-card">
+            <div class="step-number">03</div>
+            <h3 style="font-size: 1.6rem; margin-bottom: 1rem; font-weight: 600;">Premiere</h3>
+            <p style="color: var(--text-muted); line-height: 1.7; font-size: 1.05rem;">In minutes, a fully mastered short film is delivered. Complete with dynamic scene transitions and scored background music.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Supported Genres -->
+<section style="padding: 6rem 0 8rem; text-align: center;">
+    <h2 style="font-size: 2.8rem; margin-bottom: 4rem; font-weight: 800; background: linear-gradient(to right, #cbd5e1, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Explore Boundless Genres</h2>
+    
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; max-width: 900px; margin: 0 auto;">
+        <span class="genre-pill">💥 Action</span>
+        <span class="genre-pill">🔪 Thriller</span>
+        <span class="genre-pill">🛸 Sci-Fi</span>
+        <span class="genre-pill">👻 Horror</span>
+        <span class="genre-pill">🎨 Kids Animation</span>
+        <span class="genre-pill">🧚‍♀️ Fairy Tale</span>
+        <span class="genre-pill">📚 Educational</span>
+        <span class="genre-pill">❤️ Romantic</span>
+        <span class="genre-pill">😂 Rom-Com</span>
+        <span class="genre-pill">🎭 Drama</span>
+        <span class="genre-pill">🏛️ Historical</span>
+        <span class="genre-pill">🔍 Mystery</span>
+        <span class="genre-pill">🗺️ Adventure</span>
+        <span class="genre-pill">🤣 Comedy</span>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ movie.title }} - AI Movie Generator{% endblock %}
+
+{% block extra_head %}
+<meta http-equiv="refresh" content="30">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Back button -->
+    <a href="{% url 'movies:dashboard' %}" class="text-blue-400 hover:underline mb-4 inline-block">&larr; Back to Dashboard</a>
+
+    <!-- Movie Info -->
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h1 class="text-3xl font-bold">{{ movie.title }}</h1>
+                <p class="text-gray-400">{{ movie.get_genre_display }} &bull; {{ movie.duration_minutes }} minutes</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-sm {% if movie.status == 'done' %}bg-green-800 text-green-200{% elif movie.status == 'processing' %}bg-yellow-800 text-yellow-200{% elif movie.status == 'failed' %}bg-red-800 text-red-200{% else %}bg-gray-700 text-gray-300{% endif %}">
+                {{ movie.get_status_display }}
+            </span>
+        </div>
+
+        <!-- Progress -->
+        {% if movie.status != 'done' and movie.status != 'failed' %}
+        <div class="mb-4">
+            <div class="flex justify-between text-sm text-gray-400 mb-2">
+                <span>Generation Progress</span>
+                <span>{{ movie.progress_percentage }}%</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-3">
+                <div id="progress-bar" class="bg-blue-600 h-3 rounded-full transition-all" style="width: {{ movie.progress_percentage }}%"></div>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Processing scene {{ movie.current_scene }} of {{ movie.total_scenes }}</p>
+        </div>
+        {% endif %}
+
+        <p class="text-gray-300 mb-4">{{ movie.description }}</p>
+
+        {% if movie.status == 'done' %}
+        <div class="flex space-x-4">
+            <a href="{% url 'movies:movie_download' movie.id %}" class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded-md font-medium">Download</a>
+            {% if not movie.youtube_id %}
+            <form action="{% url 'movies:movie_youtube_upload' movie.id %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-md font-medium text-white transition-colors duration-200">
+                    <span class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        Upload to YouTube
+                    </span>
+                </button>
+            </form>
+            {% else %}
+            <a href="{{ movie.youtube_url }}" target="_blank" class="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-md font-medium text-white flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                Watch on YouTube
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Video Player -->
+    {% if movie.video_file %}
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Watch Movie</h2>
+        <video controls class="w-full rounded-lg">
+            <source src="{{ movie.video_file.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    {% endif %}
+
+    <!-- Script -->
+    {% if movie.script %}
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Script</h2>
+        <div class="bg-gray-900 rounded p-4 max-h-96 overflow-y-auto">
+            <pre class="text-sm text-gray-300 whitespace-pre-wrap">{{ movie.script }}</pre>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Scenes List -->
+    {% if scenes %}
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Scenes</h2>
+        <div class="space-y-3">
+            {% for scene in scenes %}
+            <div class="bg-gray-900 rounded p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-blue-400">Scene {{ scene.scene_number }}</span>
+                    <span class="text-xs text-gray-500">{{ scene.duration_seconds }}s</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">{{ scene.description|truncatewords:30 }}</p>
+                <p class="text-gray-500 text-xs italic">{{ scene.narration|truncatewords:20 }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh progress for processing movies
+setTimeout(function() {
+    location.reload();
+}, 30000);
+</script>
+{% endblock %}

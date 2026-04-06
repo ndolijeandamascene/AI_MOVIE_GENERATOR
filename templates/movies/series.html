@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ series.title }} - AI Movie Generator{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Back button -->
+    <a href="{% url 'movies:dashboard' %}" class="text-blue-400 hover:underline mb-4 inline-block">&larr; Back to Dashboard</a>
+
+    <!-- Series Info -->
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <h1 class="text-3xl font-bold mb-2">{{ series.title }}</h1>
+        <p class="text-gray-400 mb-4">{{ series.get_genre_display }} &bull; {{ series.total_episodes }} episodes planned</p>
+        <p class="text-gray-300">{{ series.description }}</p>
+    </div>
+
+    <!-- Episodes List -->
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Episodes</h2>
+
+        {% if episodes %}
+        <div class="space-y-4">
+            {% for episode in episodes %}
+            <div class="bg-gray-900 rounded-lg p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <div>
+                        <h3 class="text-lg font-semibold">Episode {{ episode.episode_number }}: {{ episode.title }}</h3>
+                        <p class="text-sm text-gray-500">{{ episode.duration_minutes }} minutes</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs {% if episode.status == 'done' %}bg-green-800 text-green-200{% elif episode.status == 'processing' %}bg-yellow-800 text-yellow-200{% elif episode.status == 'failed' %}bg-red-800 text-red-200{% else %}bg-gray-700 text-gray-300{% endif %}">
+                        {{ episode.get_status_display }}
+                    </span>
+                </div>
+
+                <!-- Progress -->
+                {% if episode.status != 'done' and episode.status != 'failed' %}
+                <div class="mb-3">
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="bg-purple-600 h-2 rounded-full" style="width: {{ episode.progress_percentage }}%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Scene {{ episode.current_scene }}/{{ episode.total_scenes }}</p>
+                </div>
+                {% endif %}
+
+                <div class="flex space-x-2">
+                    <a href="{% url 'movies:episode_detail' episode.id %}" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm">View</a>
+                    {% if episode.status == 'done' %}
+                    <a href="{% url 'movies:episode_download' episode.id %}" class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">Download</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-400 text-center py-8">No episodes yet. Create the first episode to start your series!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

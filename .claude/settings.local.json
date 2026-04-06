@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(django-admin startproject:*)",
+      "Bash(python manage.py startapp users)",
+      "Bash(python manage.py startapp movies)",
+      "Bash(mkdir -p movies/services)",
+      "Bash(mkdir -p templates/users)",
+      "Bash(mkdir -p templates/movies)",
+      "Bash(mkdir -p static/css)",
+      "Bash(mkdir -p static/js)",
+      "Bash(python:*)",
+      "Bash(pip install:*)"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Series - AI Movie Generator{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-gray-800 rounded-lg p-8">
+        <h1 class="text-3xl font-bold mb-6">{{ title }}</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-6">
+                <label for="id_title" class="block text-sm font-medium text-gray-300 mb-2">Series Title</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.title.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-6">
+                <label for="id_genre" class="block text-sm font-medium text-gray-300 mb-2">Genre</label>
+                {{ form.genre }}
+                {% if form.genre.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.genre.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-6">
+                <label for="id_description" class="block text-sm font-medium text-gray-300 mb-2">Series Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.description.errors.0 }}</p>
+                {% endif %}
+                <p class="text-gray-500 text-xs mt-1">Describe your series premise and main characters.</p>
+            </div>
+
+            <div class="mb-6">
+                <label for="id_total_episodes" class="block text-sm font-medium text-gray-300 mb-2">Number of Episodes</label>
+                {{ form.total_episodes }}
+                {% if form.total_episodes.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.total_episodes.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="flex space-x-4">
+                <button type="submit" class="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition">
+                    Create Series
+                </button>
+                <a href="{% url 'movies:dashboard' %}" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium transition">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

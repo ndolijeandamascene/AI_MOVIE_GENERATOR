@@ -1,0 +1,32 @@
+# Core
+django>=4.2
+djangorestframework
+python-dotenv
+whitenoise
+
+# Database
+psycopg2-binary
+
+# Background tasks
+celery
+redis
+django-celery-results
+
+# AI & Media
+edge-tts
+requests
+openai
+pillow
+
+
+# Storage
+boto3
+django-storages
+
+# Payments (Phase 2)
+stripe
+
+# Utilities
+python-decouple
+django-crispy-forms
+crispy-tailwind
